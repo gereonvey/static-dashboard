@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2064%2064%27%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%27bg%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%270%25%27%20stop-color%3D%27%230b0f17%27/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%27100%25%27%20stop-color%3D%27%23111827%27/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%27accent%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%270%25%27%20stop-color%3D%27%23f472b6%27/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%27100%25%27%20stop-color%3D%27%23ec4899%27/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%3C/defs%3E%0A%20%20%3Crect%20x%3D%274%27%20y%3D%274%27%20width%3D%2756%27%20height%3D%2756%27%20rx%3D%2714%27%20fill%3D%27url%28%23bg%29%27/%3E%0A%20%20%3Cpath%20d%3D%27M19%2022%20L29%2032%20L19%2042%27%20fill%3D%27none%27%20stroke%3D%27url%28%23accent%29%27%20stroke-width%3D%275%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%0A%20%20%3Crect%20x%3D%2733%27%20y%3D%2738%27%20width%3D%2714%27%20height%3D%274.5%27%20rx%3D%272.25%27%20fill%3D%27url%28%23accent%29%27/%3E%0A%3C/svg%3E" type="image/svg+xml">
+    <meta name="description" content="Bookmark dashboard generated from YAML.">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Inter"', 'Avenir Next', 'Segoe UI', 'ui-sans-serif', 'system-ui', 'sans-serif']
+            },
+            colors: {
+              slate: {
+                950: '#090c12'
+              }
+            }
+          }
+        }
+      };
+    </script>
+    <script defer src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      body {
+        background:
+          radial-gradient(circle at top, rgba(45, 212, 191, 0.08), transparent 28%),
+          radial-gradient(circle at 85% 0%, rgba(168, 85, 247, 0.10), transparent 24%),
+          linear-gradient(180deg, #0b0f17 0%, #090d14 100%);
+      }
+      .surface {
+        background: rgba(12, 18, 28, 0.34);
+        border: 1px solid rgba(139, 92, 246, 0.12);
+        box-shadow: inset 0 1px 0 rgba(45, 212, 191, 0.03);
+      }
+      .surface-soft {
+        background: transparent;
+        border: 0;
+      }
+      .tag-chip {
+        background: rgba(31, 41, 55, 0.55);
+        border: 1px solid rgba(139, 92, 246, 0.16);
+      }
+      .section-grid {
+        display: grid;
+        gap: 1.25rem;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+        align-items: start;
+      }
+      .bookmark-list {
+        display: grid;
+        gap: 0.35rem;
+      }
+      [x-cloak] {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen text-slate-100 antialiased">
+    <script id="dashboard-data" type="application/json">{"generatedAt": "2026-03-15T18:44:31.988547+00:00", "categoryCount": 4, "itemCount": 19, "categories": [{"name": "Infrastructure", "icon": "lucide:server", "itemCount": 4, "items": [{"name": "Home Assistant", "url": "https://www.home-assistant.io/", "icon": "simple-icons:homeassistant", "tags": ["smart-home", "dashboard"], "searchText": "infrastructure home assistant https://www.home-assistant.io/ smart-home dashboard"}, {"name": "pfSense", "url": "https://www.pfsense.org/", "icon": "lucide:shield", "tags": ["network", "firewall", "gateway"], "searchText": "infrastructure pfsense https://www.pfsense.org/ network firewall gateway"}, {"name": "UniFi", "url": "https://ui.com/", "icon": "simple-icons:ubiquiti", "tags": ["network", "wifi", "controller"], "searchText": "infrastructure unifi https://ui.com/ network wifi controller"}, {"name": "Synology", "url": "https://www.synology.com/", "icon": "cbi:synology-dsm", "tags": ["storage", "nas", "home"], "searchText": "infrastructure synology https://www.synology.com/ storage nas home"}]}, {"name": "Dev Tools", "icon": "lucide:wrench", "itemCount": 5, "items": [{"name": "n8n", "url": "https://n8n.io/", "icon": "simple-icons:n8n", "tags": ["workflows", "integration"], "searchText": "dev tools n8n https://n8n.io/ workflows integration"}, {"name": "NocoDB", "url": "https://nocodb.com/", "icon": "material-symbols:view-kanban-outline-sharp", "tags": ["database", "nocode", "kanban"], "searchText": "dev tools nocodb https://nocodb.com/ database nocode kanban"}, {"name": "Swagger UI", "url": "https://swagger.io/tools/swagger-ui/", "icon": "simple-icons:swagger", "tags": ["api", "docs", "development"], "searchText": "dev tools swagger ui https://swagger.io/tools/swagger-ui/ api docs development"}, {"name": "OpenCode", "url": "https://opencode.ai/", "icon": "lucide:square-code", "tags": ["code", "editor", "development"], "searchText": "dev tools opencode https://opencode.ai/ code editor development"}, {"name": "Helm", "url": "https://helm.sh/", "icon": "simple-icons:helm", "tags": ["packages", "charts", "kubernetes"], "searchText": "dev tools helm https://helm.sh/ packages charts kubernetes"}]}, {"name": "Observability", "icon": "lucide:activity", "itemCount": 4, "items": [{"name": "VictoriaLogs", "url": "https://victoriametrics.com/products/victorialogs/", "icon": "simple-icons:victoriametrics", "tags": ["logs", "observability", "search"], "searchText": "observability victorialogs https://victoriametrics.com/products/victorialogs/ logs observability search"}, {"name": "Grafana", "url": "https://grafana.com/", "icon": "simple-icons:grafana", "tags": ["metrics", "dashboards", "observability"], "searchText": "observability grafana https://grafana.com/ metrics dashboards observability"}, {"name": "Kubernetes", "url": "https://kubernetes.io/", "icon": "simple-icons:kubernetes", "tags": ["cluster", "orchestration", "containers"], "searchText": "observability kubernetes https://kubernetes.io/ cluster orchestration containers"}, {"name": "Argo CD", "url": "https://argo-cd.readthedocs.io/", "icon": "simple-icons:argo", "tags": ["gitops", "deploy", "kubernetes"], "searchText": "observability argo cd https://argo-cd.readthedocs.io/ gitops deploy kubernetes"}]}, {"name": "Collaboration", "icon": "lucide:messages-square", "itemCount": 6, "items": [{"name": "GitLab", "url": "https://about.gitlab.com/", "icon": "simple-icons:gitlab", "tags": ["gitlab", "scm", "ci"], "searchText": "collaboration gitlab https://about.gitlab.com/ gitlab scm ci"}, {"name": "GitHub", "url": "https://github.com/", "icon": "simple-icons:github", "tags": ["github", "scm", "code"], "searchText": "collaboration github https://github.com/ github scm code"}, {"name": "Mattermost", "url": "https://mattermost.com/", "icon": "simple-icons:mattermost", "tags": ["chat", "collaboration"], "searchText": "collaboration mattermost https://mattermost.com/ chat collaboration"}, {"name": "Google Drive", "url": "https://drive.google.com/", "icon": "simple-icons:googledrive", "tags": ["files", "cloud", "workspace"], "searchText": "collaboration google drive https://drive.google.com/ files cloud workspace"}, {"name": "Google Docs", "url": "https://docs.google.com/", "icon": "simple-icons:googledocs", "tags": ["docs", "writing", "workspace"], "searchText": "collaboration google docs https://docs.google.com/ docs writing workspace"}, {"name": "Slack", "url": "https://slack.com/", "icon": "simple-icons:slack", "tags": ["chat", "collaboration", "workspace"], "searchText": "collaboration slack https://slack.com/ chat collaboration workspace"}]}]}</script>
+    <main
+      x-data="dashboardApp()"
+      x-init="init()"
+      class="mx-auto min-h-screen w-full px-4 py-8 sm:px-6 lg:px-8"
+    >
+      <header class="mx-auto max-w-3xl text-center">
+        <h1 class="text-2xl font-semibold tracking-tight text-white sm:text-3xl">Dashboard</h1>
+        <div class="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-slate-400">
+          <span><span class="text-cyan-300" x-text="totalItemCount"></span> bookmarks</span>
+          <span><span class="text-fuchsia-300" x-text="categoryCount"></span> categories</span>
+          <template x-if="query">
+            <span><span class="text-violet-300" x-text="visibleItemCount"></span> shown</span>
+          </template>
+        </div>
+      </header>
+
+      <section class="mx-auto mt-8 max-w-2xl">
+        <label class="flex items-center gap-3 border-b border-slate-800 px-4 py-3 transition focus-within:border-fuchsia-500/70">
+          <span class="iconify text-lg text-fuchsia-400/80" data-icon="lucide:search"></span>
+          <input
+            x-ref="search"
+            x-model="query"
+            type="search"
+            placeholder="Search"
+            class="w-full border-0 bg-transparent text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-0 sm:text-base"
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <kbd class="hidden rounded-md border border-violet-500/20 bg-slate-900/80 px-2 py-1 text-xs text-slate-500 sm:block">/</kbd>
+        </label>
+      </section>
+
+      <section class="mx-auto mt-12 max-w-[1500px]" x-show="visibleItemCount > 0" x-cloak>
+        <div class="section-grid">
+          <template x-for="category in filteredCategories" :key="category.name">
+            <section class="surface rounded-2xl px-5 py-4">
+              <div class="mb-4 flex items-center justify-between gap-3 border-b border-violet-500/10 pb-3">
+                <div class="flex min-w-0 items-center gap-3">
+                  <span class="iconify shrink-0 text-base text-fuchsia-400/80" :data-icon="category.icon"></span>
+                  <h2 class="truncate text-sm font-medium text-slate-200" x-text="category.name"></h2>
+                </div>
+                <span class="text-[11px] text-slate-600" x-text="category.items.length"></span>
+              </div>
+              <div class="bookmark-list">
+                <template x-for="item in category.items" :key="item.url">
+                  <a
+                    :href="item.url"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    class="group flex items-start gap-4 rounded-xl px-3 py-3 transition hover:bg-fuchsia-500/[0.05]"
+                  >
+                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-slate-900/85 text-cyan-300/80 transition group-hover:text-cyan-200">
+                      <span class="iconify text-xl" :data-icon="item.icon"></span>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-center gap-2">
+                        <h3 class="truncate text-sm font-medium text-white" x-text="item.name"></h3>
+                        <span class="iconify shrink-0 text-slate-700 transition group-hover:text-fuchsia-300" data-icon="lucide:arrow-up-right"></span>
+                      </div>
+                      <p class="mt-1 max-w-[34ch] truncate text-xs text-slate-500" x-text="item.url"></p>
+                      <div class="mt-2 flex flex-wrap gap-2" x-show="item.tags.length">
+                        <template x-for="tag in item.tags" :key="tag">
+                          <span class="tag-chip inline-block rounded px-1.5 py-0.5 text-[9px] uppercase tracking-wide text-slate-300" x-text="tag"></span>
+                        </template>
+                      </div>
+                    </div>
+                  </a>
+                </template>
+              </div>
+            </section>
+          </template>
+        </div>
+      </section>
+
+      <section
+        x-show="visibleItemCount === 0"
+        x-cloak
+        class="mx-auto mt-14 max-w-2xl text-center"
+      >
+        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-slate-900/80 text-slate-500">
+          <span class="iconify text-2xl" data-icon="lucide:search-x"></span>
+        </div>
+        <h2 class="mt-4 text-lg font-medium text-white">No matches</h2>
+        <p class="mt-2 text-sm text-slate-500">Try another search term.</p>
+      </section>
+
+      <footer class="mt-10 text-center text-[10px] text-slate-500">
+        <time datetime="2026-03-15T18:44:31.988547+00:00">Dashboard: 19:44 15-03-2026</time>
+      </footer>
+    </main>
+
+    <script>
+      function dashboardApp() {
+        const data = JSON.parse(document.getElementById('dashboard-data').textContent);
+        return {
+          query: '',
+          categories: data.categories,
+          totalItemCount: data.itemCount,
+          categoryCount: data.categoryCount,
+          init() {
+            window.addEventListener('keydown', (event) => {
+              const target = event.target;
+              const typingInField = target && (
+                target.tagName === 'INPUT' ||
+                target.tagName === 'TEXTAREA' ||
+                target.isContentEditable
+              );
+
+              if (event.key === '/' && !typingInField) {
+                event.preventDefault();
+                this.$refs.search.focus();
+                this.$refs.search.select();
+              }
+
+              if (event.key === 'Enter' && this.visibleItemCount > 0 && !event.metaKey && !event.ctrlKey) {
+                if (typingInField || target === document.body) {
+                  event.preventDefault();
+                  this.openFirstVisible();
+                }
+              }
+            });
+          },
+          get normalizedQuery() {
+            return this.query.trim().toLowerCase();
+          },
+          get filteredCategories() {
+            const query = this.normalizedQuery;
+            return this.categories
+              .map((category) => {
+                const items = !query
+                  ? category.items
+                  : category.items.filter((item) => item.searchText.includes(query));
+                return {
+                  ...category,
+                  items,
+                };
+              })
+              .filter((category) => category.items.length > 0);
+          },
+          get visibleItemCount() {
+            return this.filteredCategories.reduce((count, category) => count + category.items.length, 0);
+          },
+          openFirstVisible() {
+            const first = this.filteredCategories[0] && this.filteredCategories[0].items[0];
+            if (first) {
+              window.open(first.url, '_blank', 'noopener,noreferrer');
+            }
+          }
+        };
+      }
+    </script>
+  </body>
+</html>

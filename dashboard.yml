@@ -1,0 +1,146 @@
+categories:
+  - name: Infrastructure
+    icon: lucide:server
+    items:
+      - name: Home Assistant
+        url: https://www.home-assistant.io/
+        icon: simple-icons:homeassistant
+        tags:
+          - smart-home
+          - dashboard
+      - name: pfSense
+        url: https://www.pfsense.org/
+        icon: lucide:shield
+        tags:
+          - network
+          - firewall
+          - gateway
+      - name: UniFi
+        url: https://ui.com/
+        icon: simple-icons:ubiquiti
+        tags:
+          - network
+          - wifi
+          - controller
+      - name: Synology
+        url: https://www.synology.com/
+        icon: cbi:synology-dsm
+        tags:
+          - storage
+          - nas
+          - home
+
+  - name: Dev Tools
+    icon: lucide:wrench
+    items:
+      - name: n8n
+        url: https://n8n.io/
+        icon: simple-icons:n8n
+        tags:
+          - workflows
+          - integration
+      - name: NocoDB
+        url: https://nocodb.com/
+        icon: material-symbols:view-kanban-outline-sharp
+        tags:
+          - database
+          - nocode
+          - kanban
+      - name: Swagger UI
+        url: https://swagger.io/tools/swagger-ui/
+        icon: simple-icons:swagger
+        tags:
+          - api
+          - docs
+          - development
+      - name: OpenCode
+        url: https://opencode.ai/
+        icon: lucide:square-code
+        tags:
+          - code
+          - editor
+          - development
+      - name: Helm
+        url: https://helm.sh/
+        icon: simple-icons:helm
+        tags:
+          - packages
+          - charts
+          - kubernetes
+
+  - name: Observability
+    icon: lucide:activity
+    items:
+      - name: VictoriaLogs
+        url: https://victoriametrics.com/products/victorialogs/
+        icon: simple-icons:victoriametrics
+        tags:
+          - logs
+          - observability
+          - search
+      - name: Grafana
+        url: https://grafana.com/
+        icon: simple-icons:grafana
+        tags:
+          - metrics
+          - dashboards
+          - observability
+      - name: Kubernetes
+        url: https://kubernetes.io/
+        icon: simple-icons:kubernetes
+        tags:
+          - cluster
+          - orchestration
+          - containers
+      - name: Argo CD
+        url: https://argo-cd.readthedocs.io/
+        icon: simple-icons:argo
+        tags:
+          - gitops
+          - deploy
+          - kubernetes
+
+  - name: Collaboration
+    icon: lucide:messages-square
+    items:
+      - name: GitLab
+        url: https://about.gitlab.com/
+        icon: simple-icons:gitlab
+        tags:
+          - gitlab
+          - scm
+          - ci
+      - name: GitHub
+        url: https://github.com/
+        icon: simple-icons:github
+        tags:
+          - github
+          - scm
+          - code
+      - name: Mattermost
+        url: https://mattermost.com/
+        icon: simple-icons:mattermost
+        tags:
+          - chat
+          - collaboration
+      - name: Google Drive
+        url: https://drive.google.com/
+        icon: simple-icons:googledrive
+        tags:
+          - files
+          - cloud
+          - workspace
+      - name: Google Docs
+        url: https://docs.google.com/
+        icon: simple-icons:googledocs
+        tags:
+          - docs
+          - writing
+          - workspace
+      - name: Slack
+        url: https://slack.com/
+        icon: simple-icons:slack
+        tags:
+          - chat
+          - collaboration
+          - workspace
