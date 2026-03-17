@@ -25,19 +25,19 @@ Generate the dashboard:
 
 ```bash
 pip install pyyaml
-python3 generate.py
+python3 generate.py --source dashboard.yml --output index.html
 ```
 
 Or, if you prefer user installs:
 
 ```bash
 python3 -m pip install --user pyyaml
-python3 generate.py
+python3 generate.py --source dashboard.yml --output index.html
 ```
 
 
 ```bash
-python3 generate.py
+python3 generate.py --source dashboard.yml --output index.html
 ```
 
 ## Editing the dashboard
