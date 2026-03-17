@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import argparse
 import sys
 import urllib.parse
 from datetime import datetime, timezone
@@ -14,11 +15,6 @@ from zoneinfo import ZoneInfo
 import yaml
 
 
-ROOT = Path(__file__).resolve().parent
-SOURCE = ROOT / "dashboard.yml"
-OUTPUT_FILE = ROOT / "index.html"
-
-
 def load_yaml(path: Path) -> dict[str, Any]:
     with path.open("r", encoding="utf-8") as handle:
         return yaml.safe_load(handle) or {}
@@ -27,7 +23,7 @@ def load_yaml(path: Path) -> dict[str, Any]:
 def normalize(data: dict[str, Any]) -> dict[str, Any]:
     categories = data.get("categories")
     if not isinstance(categories, list):
-        raise ValueError("Expected top-level 'categories' list in dashboard.yml")
+        raise ValueError("Expected top-level 'categories' list in source YAML")
 
     normalized_categories: list[dict[str, Any]] = []
     total_items = 0
@@ -160,17 +156,112 @@ def build_html(data: dict[str, Any]) -> str:
     <style>
       :root {{
         color-scheme: dark;
+        --bg-base: #070b12;
+        --bg-deep: #0b1020;
+        --bg-surface: rgba(12, 18, 28, 0.42);
+        --bg-surface-border: rgba(148, 163, 184, 0.14);
+        --bg-orb-violet: rgba(139, 92, 246, 0.20);
+        --bg-orb-fuchsia: rgba(236, 72, 153, 0.14);
       }}
       body {{
         background:
-          radial-gradient(circle at top, rgba(45, 212, 191, 0.08), transparent 28%),
-          radial-gradient(circle at 85% 0%, rgba(168, 85, 247, 0.10), transparent 24%),
-          linear-gradient(180deg, #0b0f17 0%, #090d14 100%);
+          radial-gradient(circle at 85% 0%, rgba(168, 85, 247, 0.08), transparent 24%),
+          linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-base) 100%);
+        overflow-x: hidden;
+      }}
+      body::before {{
+        position: fixed;
+        inset: -20%;
+        background:
+          radial-gradient(circle at 82% 10%, rgba(168, 85, 247, 0.14), transparent 30%),
+          radial-gradient(circle at 54% 12%, rgba(236, 72, 153, 0.12), transparent 26%);
+        filter: blur(72px);
+        opacity: 0.72;
+        pointer-events: none;
+        transform-origin: center;
+        animation: gradient-drift 18s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
+        content: "";
+      }}
+      body::after {{
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(circle at center, transparent 0%, rgba(7, 11, 18, 0.08) 52%, rgba(7, 11, 18, 0.52) 100%);
+        pointer-events: none;
+        content: "";
+      }}
+      .ambient {{
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        animation: ambient-float 20s ease-in-out infinite alternate;
+      }}
+      .ambient__aurora {{
+        position: absolute;
+        inset: -20% -10%;
+        background:
+          radial-gradient(circle at 78% 26%, rgba(168, 85, 247, 0.16), transparent 18%);
+        filter: blur(58px);
+        opacity: 0.44;
+        transform-origin: center;
+        animation: aurora-shift 16s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
+      }}
+      .ambient__orb {{
+        position: absolute;
+        border-radius: 9999px;
+        filter: blur(96px);
+        mix-blend-mode: screen;
+        opacity: 1;
+        will-change: transform;
+      }}
+      .ambient__orb--two {{
+        top: 18%;
+        right: -12rem;
+        width: 38rem;
+        height: 38rem;
+        background:
+          radial-gradient(circle at 40% 35%, var(--bg-orb-violet), transparent 56%),
+          radial-gradient(circle at 65% 60%, var(--bg-orb-fuchsia), transparent 62%);
+        animation: drift-two 15s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
+      }}
+      .ambient__orb--three {{
+        top: -8rem;
+        bottom: auto;
+        left: 42%;
+        right: auto;
+        width: 24rem;
+        height: 24rem;
+        background:
+          radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.12), transparent 50%),
+          radial-gradient(circle at 35% 35%, rgba(168, 85, 247, 0.06), transparent 60%);
+        animation: drift-three 16s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
+      }}
+      .ambient__beam--secondary {{
+        top: -4%;
+        bottom: auto;
+        left: 55%;
+        width: min(44vw, 34rem);
+        height: 24rem;
+        background:
+          radial-gradient(circle at 50% 45%, rgba(244, 63, 94, 0.18), transparent 34%),
+          radial-gradient(circle at 58% 55%, rgba(236, 72, 153, 0.16), transparent 42%),
+          radial-gradient(circle at 44% 65%, rgba(168, 85, 247, 0.08), transparent 52%);
+        filter: blur(150px);
+        opacity: 0.2;
+        animation: pulse-beam-secondary 18s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
+      }}
+      main {{
+        position: relative;
+        z-index: 1;
       }}
       .surface {{
-        background: rgba(12, 18, 28, 0.34);
-        border: 1px solid rgba(139, 92, 246, 0.12);
-        box-shadow: inset 0 1px 0 rgba(45, 212, 191, 0.03);
+        background: var(--bg-surface);
+        backdrop-filter: blur(18px);
+        border: 1px solid var(--bg-surface-border);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.05),
+          0 18px 60px rgba(3, 7, 18, 0.28);
       }}
       .surface-soft {{
         background: transparent;
@@ -181,10 +272,20 @@ def build_html(data: dict[str, Any]) -> str:
         border: 1px solid rgba(139, 92, 246, 0.16);
       }}
       .section-grid {{
-        display: grid;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
         gap: 1.25rem;
-        grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-        align-items: start;
+        width: 100%;
+      }}
+      .section-column {{
+        display: grid;
+        align-content: start;
+        gap: 1.25rem;
+        width: min(100%, 350px);
+      }}
+      .category-card {{
+        width: 100%;
       }}
       .bookmark-list {{
         display: grid;
@@ -193,9 +294,53 @@ def build_html(data: dict[str, Any]) -> str:
       [x-cloak] {{
         display: none !important;
       }}
+      @keyframes gradient-drift {{
+        0% {{ transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: 0.64; }}
+        50% {{ transform: translate3d(-2%, 2%, 0) scale(1.06) rotate(-1.5deg); opacity: 0.76; }}
+        100% {{ transform: translate3d(3%, -1.5%, 0) scale(1.1) rotate(1.5deg); opacity: 0.68; }}
+      }}
+      @keyframes ambient-float {{
+        0% {{ transform: translate3d(0, 0, 0); }}
+        100% {{ transform: translate3d(0, -1rem, 0); }}
+      }}
+      @keyframes aurora-shift {{
+        0% {{ transform: translate3d(0, 0, 0) rotate(0deg) scale(0.98); opacity: 0.4; }}
+        50% {{ transform: translate3d(2rem, -1rem, 0) rotate(4deg) scale(1.06); opacity: 0.58; }}
+        100% {{ transform: translate3d(-2.5rem, 1.5rem, 0) rotate(-4deg) scale(1.1); opacity: 0.46; }}
+      }}
+      @keyframes drift-two {{
+        0% {{ transform: translate3d(0, 0, 0) scale(0.98); opacity: 0.42; }}
+        50% {{ transform: translate3d(-4rem, 2.5rem, 0) scale(1.06); opacity: 0.58; }}
+        100% {{ transform: translate3d(-7rem, 4rem, 0) scale(1.12); opacity: 0.46; }}
+      }}
+      @keyframes drift-three {{
+        0% {{ transform: translate3d(0, 0, 0) scale(0.98); opacity: 0.34; }}
+        50% {{ transform: translate3d(3rem, -1.5rem, 0) scale(1.06); opacity: 0.48; }}
+        100% {{ transform: translate3d(5rem, -3rem, 0) scale(1.1); opacity: 0.38; }}
+      }}
+      @keyframes pulse-beam-secondary {{
+        0% {{ opacity: 0.12; transform: translateX(-50%) translateY(0) rotate(2deg) scale(1); }}
+        50% {{ opacity: 0.24; transform: translateX(-50%) translateY(-2rem) rotate(-1.5deg) scale(1.08); }}
+        100% {{ opacity: 0.16; transform: translateX(-50%) translateY(1.5rem) rotate(1.5deg) scale(1.12); }}
+      }}
+      @media (prefers-reduced-motion: reduce) {{
+        body::before,
+        .ambient,
+        .ambient__aurora,
+        .ambient__orb,
+        .ambient__beam {{
+          animation: none;
+        }}
+      }}
     </style>
   </head>
   <body class="min-h-screen text-slate-100 antialiased">
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient__aurora"></div>
+      <div class="ambient__beam ambient__beam--secondary"></div>
+      <div class="ambient__orb ambient__orb--two"></div>
+      <div class="ambient__orb ambient__orb--three"></div>
+    </div>
     <script id="dashboard-data" type="application/json">{payload}</script>
     <main
       x-data="dashboardApp()"
@@ -229,44 +374,48 @@ def build_html(data: dict[str, Any]) -> str:
         </label>
       </section>
 
-      <section class="mx-auto mt-12 max-w-[1500px]" x-show="visibleItemCount > 0" x-cloak>
+      <section x-ref="categorySection" class="mx-auto mt-12 w-full" x-show="visibleItemCount > 0" x-cloak>
         <div class="section-grid">
-          <template x-for="category in filteredCategories" :key="category.name">
-            <section class="surface rounded-2xl px-5 py-4">
-              <div class="mb-4 flex items-center justify-between gap-3 border-b border-violet-500/10 pb-3">
-                <div class="flex min-w-0 items-center gap-3">
-                  <span class="iconify shrink-0 text-base text-fuchsia-400/80" :data-icon="category.icon"></span>
-                  <h2 class="truncate text-sm font-medium text-slate-200" x-text="category.name"></h2>
-                </div>
-                <span class="text-[11px] text-slate-600" x-text="category.items.length"></span>
-              </div>
-              <div class="bookmark-list">
-                <template x-for="item in category.items" :key="item.url">
-                  <a
-                    :href="item.url"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    class="group flex items-start gap-4 rounded-xl px-3 py-3 transition hover:bg-fuchsia-500/[0.05]"
-                  >
-                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-slate-900/85 text-cyan-300/80 transition group-hover:text-cyan-200">
-                      <span class="iconify text-xl" :data-icon="item.icon"></span>
+          <template x-for="(column, columnIndex) in masonryColumns" :key="`column-${{columnIndex}}`">
+            <div class="section-column">
+              <template x-for="category in column" :key="category.name">
+                <section class="surface category-card rounded-2xl px-5 py-4">
+                  <div class="mb-4 flex items-center justify-between gap-3 border-b border-violet-500/10 pb-3">
+                    <div class="flex min-w-0 items-center gap-3">
+                      <span class="iconify shrink-0 text-base text-fuchsia-400/80" :data-icon="category.icon"></span>
+                      <h2 class="truncate text-sm font-medium text-slate-200" x-text="category.name"></h2>
                     </div>
-                    <div class="min-w-0 flex-1">
-                      <div class="flex items-center gap-2">
-                        <h3 class="truncate text-sm font-medium text-white" x-text="item.name"></h3>
-                        <span class="iconify shrink-0 text-slate-700 transition group-hover:text-fuchsia-300" data-icon="lucide:arrow-up-right"></span>
-                      </div>
-                      <p class="mt-1 max-w-[34ch] truncate text-xs text-slate-500" x-text="item.url"></p>
-                      <div class="mt-2 flex flex-wrap gap-2" x-show="item.tags.length">
-                        <template x-for="tag in item.tags" :key="tag">
-                          <span class="tag-chip inline-block rounded px-1.5 py-0.5 text-[9px] uppercase tracking-wide text-slate-300" x-text="tag"></span>
-                        </template>
-                      </div>
-                    </div>
-                  </a>
-                </template>
-              </div>
-            </section>
+                    <span class="text-[11px] text-slate-600" x-text="category.items.length"></span>
+                  </div>
+                  <div class="bookmark-list">
+                    <template x-for="item in category.items" :key="item.url">
+                      <a
+                        :href="item.url"
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        class="group flex items-start gap-4 rounded-xl px-3 py-3 transition hover:bg-fuchsia-500/[0.05]"
+                      >
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-slate-900/85 text-cyan-300/80 transition group-hover:text-cyan-200">
+                          <span class="iconify text-xl" :data-icon="item.icon"></span>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                          <div class="flex items-center gap-2">
+                            <h3 class="truncate text-sm font-medium text-white" x-text="item.name"></h3>
+                            <span class="iconify shrink-0 text-slate-700 transition group-hover:text-fuchsia-300" data-icon="lucide:arrow-up-right"></span>
+                          </div>
+                          <p class="mt-1 max-w-[34ch] truncate text-xs text-slate-500" x-text="item.url"></p>
+                          <div class="mt-2 flex flex-wrap gap-2" x-show="item.tags.length">
+                            <template x-for="tag in item.tags" :key="tag">
+                              <span class="tag-chip inline-block rounded px-1.5 py-0.5 text-[9px] uppercase tracking-wide text-slate-300" x-text="tag"></span>
+                            </template>
+                          </div>
+                        </div>
+                      </a>
+                    </template>
+                  </div>
+                </section>
+              </template>
+            </div>
           </template>
         </div>
       </section>
@@ -294,9 +443,27 @@ def build_html(data: dict[str, Any]) -> str:
         return {{
           query: '',
           categories: data.categories,
+          layoutWidth: 0,
+          masonryColumnWidth: 350,
+          masonryGap: 20,
           totalItemCount: data.itemCount,
           categoryCount: data.categoryCount,
           init() {{
+            const updateLayoutWidth = () => {{
+              if (this.$refs.categorySection) {{
+                this.layoutWidth = this.$refs.categorySection.clientWidth;
+              }}
+            }};
+
+            updateLayoutWidth();
+
+            if ('ResizeObserver' in window && this.$refs.categorySection) {{
+              const observer = new ResizeObserver(() => updateLayoutWidth());
+              observer.observe(this.$refs.categorySection);
+            }} else {{
+              window.addEventListener('resize', updateLayoutWidth);
+            }}
+
             window.addEventListener('keydown', (event) => {{
               const target = event.target;
               const typingInField = target && (
@@ -339,6 +506,39 @@ def build_html(data: dict[str, Any]) -> str:
           get visibleItemCount() {{
             return this.filteredCategories.reduce((count, category) => count + category.items.length, 0);
           }},
+          get masonryColumnCount() {{
+            const categoryCount = this.filteredCategories.length;
+
+            if (categoryCount <= 1) {{
+              return categoryCount;
+            }}
+
+            const availableWidth = this.layoutWidth || window.innerWidth || this.masonryColumnWidth;
+            const columnCount = Math.floor((availableWidth + this.masonryGap) / (this.masonryColumnWidth + this.masonryGap));
+
+            return Math.max(1, Math.min(categoryCount, columnCount));
+          }},
+          get masonryColumns() {{
+            const columnCount = this.masonryColumnCount;
+
+            if (columnCount <= 1) {{
+              return [this.filteredCategories];
+            }}
+
+            const columns = Array.from({{ length: columnCount }}, () => ({{ items: [], weight: 0 }}));
+
+            for (const category of this.filteredCategories) {{
+              const targetColumn = columns.reduce((lightest, column) => (
+                column.weight < lightest.weight ? column : lightest
+              ));
+              const estimatedHeight = 1 + (category.items.length * 1.2);
+
+              targetColumn.items.push(category);
+              targetColumn.weight += estimatedHeight;
+            }}
+
+            return columns.map((column) => column.items).filter((column) => column.length > 0);
+          }},
           openFirstVisible() {{
             const first = this.filteredCategories[0] && this.filteredCategories[0].items[0];
             if (first) {{
@@ -353,10 +553,29 @@ def build_html(data: dict[str, Any]) -> str:
 """
 
 
+def parse_args(argv: list[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Generate the dashboard HTML from YAML.")
+    parser.add_argument(
+        "--source",
+        required=True,
+        help="Path to the YAML source file.",
+    )
+    parser.add_argument(
+        "--output",
+        required=True,
+        help="Path to the HTML output file.",
+    )
+    return parser.parse_args(argv[1:])
+
+
 def main() -> int:
-    data = normalize(load_yaml(SOURCE))
-    OUTPUT_FILE.write_text(build_html(data), encoding="utf-8")
-    print(f"Wrote {OUTPUT_FILE.relative_to(ROOT)}")
+    args = parse_args(sys.argv)
+    source_file = Path(args.source).expanduser().resolve()
+    output_file = Path(args.output).expanduser().resolve()
+    data = normalize(load_yaml(source_file))
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    output_file.write_text(build_html(data), encoding="utf-8")
+    print(f"Wrote {output_file}")
     return 0
 
 
