@@ -15,6 +15,9 @@ from zoneinfo import ZoneInfo
 import yaml
 
 
+ROOT = Path(__file__).resolve().parents[1]
+
+
 def load_yaml(path: Path) -> dict[str, Any]:
     with path.open("r", encoding="utf-8") as handle:
         return yaml.safe_load(handle) or {}
@@ -277,15 +280,22 @@ def build_html(data: dict[str, Any]) -> str:
         align-items: flex-start;
         gap: 1.25rem;
         width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
       }}
       .section-column {{
         display: grid;
         align-content: start;
         gap: 1.25rem;
-        width: min(100%, 350px);
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
       }}
       .category-card {{
         width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
       }}
       .bookmark-list {{
         display: grid;
@@ -375,9 +385,9 @@ def build_html(data: dict[str, Any]) -> str:
       </section>
 
       <section x-ref="categorySection" class="mx-auto mt-12 w-full" x-show="visibleItemCount > 0" x-cloak>
-        <div class="section-grid">
+        <div class="section-grid" :style="masonryGridStyle">
           <template x-for="(column, columnIndex) in masonryColumns" :key="`column-${{columnIndex}}`">
-            <div class="section-column">
+            <div class="section-column" :style="masonryColumnStyle">
               <template x-for="category in column" :key="category.name">
                 <section class="surface category-card rounded-2xl px-5 py-4">
                   <div class="mb-4 flex items-center justify-between gap-3 border-b border-violet-500/10 pb-3">
@@ -393,7 +403,7 @@ def build_html(data: dict[str, Any]) -> str:
                         :href="item.url"
                         target="_blank"
                         rel="noreferrer noopener"
-                        class="group flex items-start gap-4 rounded-xl px-3 py-3 transition hover:bg-fuchsia-500/[0.05]"
+                        class="group box-border flex w-full min-w-0 items-start gap-4 rounded-xl px-3 py-3 transition hover:bg-fuchsia-500/[0.05]"
                       >
                         <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-slate-900/85 text-cyan-300/80 transition group-hover:text-cyan-200">
                           <span class="iconify text-xl" :data-icon="item.icon"></span>
@@ -506,6 +516,34 @@ def build_html(data: dict[str, Any]) -> str:
           get visibleItemCount() {{
             return this.filteredCategories.reduce((count, category) => count + category.items.length, 0);
           }},
+          get masonryRenderedColumnWidth() {{
+            const availableWidth = this.layoutWidth || window.innerWidth || this.masonryColumnWidth;
+
+            if (this.masonryColumnCount <= 1) {{
+              return Math.min(availableWidth, this.masonryColumnWidth);
+            }}
+
+            return this.masonryColumnWidth;
+          }},
+          get masonryGridStyle() {{
+            const columnCount = this.masonryColumnCount;
+
+            if (columnCount <= 0) {{
+              return '';
+            }}
+
+            const gridWidth = (columnCount * this.masonryRenderedColumnWidth) + ((columnCount - 1) * this.masonryGap);
+            return `width: min(100%, ${{gridWidth}}px);`;
+          }},
+          get masonryColumnStyle() {{
+            const columnWidth = this.masonryRenderedColumnWidth;
+
+            if (columnWidth <= 0) {{
+              return '';
+            }}
+
+            return `flex-basis: ${{columnWidth}}px; width: min(100%, ${{columnWidth}}px);`;
+          }},
           get masonryColumnCount() {{
             const categoryCount = this.filteredCategories.length;
 
@@ -575,7 +613,11 @@ def main() -> int:
     data = normalize(load_yaml(source_file))
     output_file.parent.mkdir(parents=True, exist_ok=True)
     output_file.write_text(build_html(data), encoding="utf-8")
-    print(f"Wrote {output_file}")
+    try:
+        destination = output_file.relative_to(ROOT)
+    except ValueError:
+        destination = output_file
+    print(f"Wrote {destination}")
     return 0
 
 
