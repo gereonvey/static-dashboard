@@ -89,6 +89,7 @@ def normalize(data: dict[str, Any]) -> dict[str, Any]:
         )
 
     return {
+        "title": str(data.get("title")).strip(),
         "generatedAt": datetime.now(timezone.utc).isoformat(),
         "categoryCount": len(normalized_categories),
         "itemCount": total_items,
@@ -120,7 +121,7 @@ def favicon_data_uri() -> str:
 
 
 def build_html(data: dict[str, Any]) -> str:
-    title = "Dashboard"
+    title = data.get("title", "Dashboard")
     payload = json_for_script(data)
     favicon = favicon_data_uri()
     generated_dt = datetime.fromisoformat(data["generatedAt"])
@@ -341,7 +342,7 @@ def build_html(data: dict[str, Any]) -> str:
       class="mx-auto min-h-screen w-full px-4 py-8 sm:px-6 lg:px-8"
     >
       <header class="mx-auto max-w-3xl text-center">
-        <h1 class="text-2xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-3xl">Dashboard</h1>
+        <h1 class="text-2xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-3xl">{title}</h1>
         <div class="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
           <span><span class="text-cyan-600 dark:text-cyan-300" x-text="totalItemCount"></span> bookmarks</span>
           <span><span class="text-fuchsia-600 dark:text-fuchsia-300" x-text="categoryCount"></span> categories</span>
