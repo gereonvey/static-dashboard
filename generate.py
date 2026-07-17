@@ -58,7 +58,14 @@ def normalize(data: dict[str, Any]) -> dict[str, Any]:
             if not isinstance(tags, list):
                 raise ValueError(f"Item '{item_name}' in '{name}' has invalid 'tags'")
 
-            icon_name = str(item.get("icon") or "lucide:link").strip()
+            icon_val = item.get("icon")
+            if icon_val:
+                icon_name = str(icon_val).strip()
+            else:
+                from urllib.parse import urlparse
+                parsed = urlparse(item_url)
+                base_url = f"{parsed.scheme}://{parsed.netloc}"
+                icon_name = f"{base_url}/favicon.ico"
             search_blob = " ".join(
                 [
                     name,
@@ -419,11 +426,19 @@ def build_html(data: dict[str, Any]) -> str:
                         :href="item.url"
                         target="_blank"
                         rel="noreferrer noopener"
+                        x-data="{{ iconError: false }}"
                         class="group box-border flex w-full min-w-0 items-start gap-4 rounded-xl px-3 py-3 transition hover:bg-fuchsia-500/[0.05]"
                       >
-                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-900/85 text-cyan-600 dark:text-cyan-300/80 transition group-hover:text-cyan-700 dark:group-hover:text-cyan-200">
-                          <span class="iconify text-xl" :data-icon="item.icon"></span>
-                        </div>
+                         <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-900/85 text-cyan-600 dark:text-cyan-300/80 transition group-hover:text-cyan-700 dark:group-hover:text-cyan-200">
+                            <template x-if="item.icon.startsWith('http') && !iconError">
+                              <img :src="item.icon" class="h-6 w-6 object-contain" alt="" @error="iconError = true">
+                            </template>
+                            <template x-if="!item.icon.startsWith('http') || iconError">
+                              <span class="iconify text-xl" :data-icon="item.icon.startsWith('http') ? 'lucide:link' : item.icon"></span>
+                            </template>
+                          </div>
+
+
                         <div class="min-w-0 flex-1">
                           <div class="flex items-center gap-2">
                             <h3 class="truncate text-sm font-medium text-slate-900 dark:text-white" x-text="item.name"></h3>
