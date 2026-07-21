@@ -194,32 +194,33 @@ def build_html(data: dict[str, Any]) -> str:
           --tag-chip-border: rgba(139, 92, 246, 0.16);
         }}
       }}
-       body {{
-         background:
-           linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-base) 100%);
-         overflow-x: hidden;
-       }}
-
-       body::before {{
-         position: fixed;
-         inset: -20%;
-         background: none;
-         filter: blur(72px);
-         opacity: 0.72;
-         pointer-events: none;
-         transform-origin: center;
-         animation: gradient-drift 18s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
-         content: "";
-       }}
-
-       body::after {{
-         position: fixed;
-         inset: 0;
-         background: none;
-         pointer-events: none;
-         content: "";
-       }}
-
+      body {{
+        background:
+          radial-gradient(circle at 85% 0%, rgba(168, 85, 247, 0.08), transparent 24%),
+          linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-base) 100%);
+        overflow-x: hidden;
+      }}
+      body::before {{
+        position: fixed;
+        inset: -20%;
+        background:
+          radial-gradient(circle at 82% 10%, rgba(168, 85, 247, 0.14), transparent 30%),
+          radial-gradient(circle at 54% 12%, rgba(236, 72, 153, 0.12), transparent 26%);
+        filter: blur(72px);
+        opacity: 0.72;
+        pointer-events: none;
+        transform-origin: center;
+        animation: gradient-drift 18s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
+        content: "";
+      }}
+      body::after {{
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(circle at center, transparent 0%, var(--vignette-start) 52%, var(--vignette-end) 100%);
+        pointer-events: none;
+        content: "";
+      }}
       .ambient {{
         position: fixed;
         inset: 0;
@@ -227,16 +228,16 @@ def build_html(data: dict[str, Any]) -> str:
         pointer-events: none;
         animation: ambient-float 20s ease-in-out infinite alternate;
       }}
-       .ambient__aurora {{
-         position: absolute;
-         inset: -20% -10%;
-         background: none;
-         filter: blur(58px);
-         opacity: 0.44;
-         transform-origin: center;
-         animation: aurora-shift 16s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
-       }}
-
+      .ambient__aurora {{
+        position: absolute;
+        inset: -20% -10%;
+        background:
+          radial-gradient(circle at 78% 26%, rgba(168, 85, 247, 0.16), transparent 18%);
+        filter: blur(58px);
+        opacity: 0.44;
+        transform-origin: center;
+        animation: aurora-shift 16s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
+      }}
       .ambient__orb {{
         position: absolute;
         border-radius: 9999px;
@@ -245,38 +246,42 @@ def build_html(data: dict[str, Any]) -> str:
         opacity: 1;
         will-change: transform;
       }}
-       .ambient__orb--two {{
-         top: 18%;
-         right: -12rem;
-         width: 38rem;
-         height: 38rem;
-         background: none;
-         animation: drift-two 15s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
-       }}
-
-       .ambient__orb--three {{
-         top: -8rem;
-         bottom: auto;
-         left: 42%;
-         right: auto;
-         width: 24rem;
-         height: 24rem;
-         background: none;
-         animation: drift-three 16s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
-       }}
-
-       .ambient__beam--secondary {{
-         top: -4%;
-         bottom: auto;
-         left: 55%;
-         width: min(44vw, 34rem);
-         height: 24rem;
-         background: none;
-         filter: blur(150px);
-         opacity: 0.2;
-         animation: pulse-beam-secondary 18s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
-       }}
-
+      .ambient__orb--two {{
+        top: 18%;
+        right: -12rem;
+        width: 38rem;
+        height: 38rem;
+        background:
+          radial-gradient(circle at 40% 35%, var(--bg-orb-violet), transparent 56%),
+          radial-gradient(circle at 65% 60%, var(--bg-orb-fuchsia), transparent 62%);
+        animation: drift-two 15s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
+      }}
+      .ambient__orb--three {{
+        top: -8rem;
+        bottom: auto;
+        left: 42%;
+        right: auto;
+        width: 24rem;
+        height: 24rem;
+        background:
+          radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.12), transparent 50%),
+          radial-gradient(circle at 35% 35%, rgba(168, 85, 247, 0.06), transparent 60%);
+        animation: drift-three 16s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
+      }}
+      .ambient__beam--secondary {{
+        top: -4%;
+        bottom: auto;
+        left: 55%;
+        width: min(44vw, 34rem);
+        height: 24rem;
+        background:
+          radial-gradient(circle at 50% 45%, rgba(244, 63, 94, 0.18), transparent 34%),
+          radial-gradient(circle at 58% 55%, rgba(236, 72, 153, 0.16), transparent 42%),
+          radial-gradient(circle at 44% 65%, rgba(168, 85, 247, 0.08), transparent 52%);
+        filter: blur(150px);
+        opacity: 0.2;
+        animation: pulse-beam-secondary 18s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
+      }}
       main {{
         position: relative;
         z-index: 1;
