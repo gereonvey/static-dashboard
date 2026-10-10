@@ -61,3 +61,15 @@ A nice workflow is to use a CI pipeline to regenerate the dashboard on every `da
 - `example-dashboard.jpg` — screenshot example of the generated dashboard
 
 The included `dashboard.yml` uses only public example URLs so nothing personal is exposed.
+
+## License
+
+Licensed under the [Apache License, Version 2.0](./LICENSE).
+You can use, modify, and redistribute this project for free, including for commercial use,
+subject to the license terms. When redistributing, include the license and preserve
+applicable copyright and attribution notices, including [NOTICE](./NOTICE).
+
+A credit and link back to [Static Dashboard Builder](https://github.com/mina-ai-assistant/static-dashboard)
+are appreciated, but a visible backlink is not required by the license.
+
+Third-party libraries and icons remain subject to their own licenses.
