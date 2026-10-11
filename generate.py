@@ -179,10 +179,10 @@ def build_html(data: dict[str, Any]) -> str:
           radial-gradient(circle at 82% 10%, rgba(168, 85, 247, 0.14), transparent 30%),
           radial-gradient(circle at 54% 12%, rgba(236, 72, 153, 0.12), transparent 26%);
         filter: blur(72px);
-        opacity: 0.72;
         pointer-events: none;
         transform-origin: center;
-        animation: gradient-drift 18s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
+        transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+        opacity: 0.64;
         content: "";
       }}
       body::after {{
@@ -198,7 +198,7 @@ def build_html(data: dict[str, Any]) -> str:
         inset: 0;
         overflow: hidden;
         pointer-events: none;
-        animation: ambient-float 20s ease-in-out infinite alternate;
+        transform: translate3d(0, 0, 0);
       }}
       .ambient__aurora {{
         position: absolute;
@@ -206,9 +206,9 @@ def build_html(data: dict[str, Any]) -> str:
         background:
           radial-gradient(circle at 78% 26%, rgba(168, 85, 247, 0.16), transparent 18%);
         filter: blur(58px);
-        opacity: 0.44;
         transform-origin: center;
-        animation: aurora-shift 16s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
+        transform: translate3d(0, 0, 0) rotate(0deg) scale(0.98);
+        opacity: 0.4;
       }}
       .ambient__orb {{
         position: absolute;
@@ -216,7 +216,6 @@ def build_html(data: dict[str, Any]) -> str:
         filter: blur(96px);
         mix-blend-mode: screen;
         opacity: 1;
-        will-change: transform;
       }}
       .ambient__orb--two {{
         top: 18%;
@@ -226,7 +225,8 @@ def build_html(data: dict[str, Any]) -> str:
         background:
           radial-gradient(circle at 40% 35%, var(--bg-orb-violet), transparent 56%),
           radial-gradient(circle at 65% 60%, var(--bg-orb-fuchsia), transparent 62%);
-        animation: drift-two 15s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
+        transform: translate3d(0, 0, 0) scale(0.98);
+        opacity: 0.42;
       }}
       .ambient__orb--three {{
         top: -8rem;
@@ -238,7 +238,8 @@ def build_html(data: dict[str, Any]) -> str:
         background:
           radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.12), transparent 50%),
           radial-gradient(circle at 35% 35%, rgba(168, 85, 247, 0.06), transparent 60%);
-        animation: drift-three 16s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
+        transform: translate3d(0, 0, 0) scale(0.98);
+        opacity: 0.34;
       }}
       .ambient__beam--secondary {{
         top: -4%;
@@ -251,8 +252,8 @@ def build_html(data: dict[str, Any]) -> str:
           radial-gradient(circle at 58% 55%, rgba(236, 72, 153, 0.16), transparent 42%),
           radial-gradient(circle at 44% 65%, rgba(168, 85, 247, 0.08), transparent 52%);
         filter: blur(150px);
-        opacity: 0.2;
-        animation: pulse-beam-secondary 18s cubic-bezier(0.42, 0, 0.2, 1) infinite alternate;
+        opacity: 0.12;
+        transform: translateX(-50%) translateY(0) rotate(2deg) scale(1);
       }}
       main {{
         position: relative;
@@ -303,44 +304,6 @@ def build_html(data: dict[str, Any]) -> str:
       }}
       [x-cloak] {{
         display: none !important;
-      }}
-      @keyframes gradient-drift {{
-        0% {{ transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: 0.64; }}
-        50% {{ transform: translate3d(-2%, 2%, 0) scale(1.06) rotate(-1.5deg); opacity: 0.76; }}
-        100% {{ transform: translate3d(3%, -1.5%, 0) scale(1.1) rotate(1.5deg); opacity: 0.68; }}
-      }}
-      @keyframes ambient-float {{
-        0% {{ transform: translate3d(0, 0, 0); }}
-        100% {{ transform: translate3d(0, -1rem, 0); }}
-      }}
-      @keyframes aurora-shift {{
-        0% {{ transform: translate3d(0, 0, 0) rotate(0deg) scale(0.98); opacity: 0.4; }}
-        50% {{ transform: translate3d(2rem, -1rem, 0) rotate(4deg) scale(1.06); opacity: 0.58; }}
-        100% {{ transform: translate3d(-2.5rem, 1.5rem, 0) rotate(-4deg) scale(1.1); opacity: 0.46; }}
-      }}
-      @keyframes drift-two {{
-        0% {{ transform: translate3d(0, 0, 0) scale(0.98); opacity: 0.42; }}
-        50% {{ transform: translate3d(-4rem, 2.5rem, 0) scale(1.06); opacity: 0.58; }}
-        100% {{ transform: translate3d(-7rem, 4rem, 0) scale(1.12); opacity: 0.46; }}
-      }}
-      @keyframes drift-three {{
-        0% {{ transform: translate3d(0, 0, 0) scale(0.98); opacity: 0.34; }}
-        50% {{ transform: translate3d(3rem, -1.5rem, 0) scale(1.06); opacity: 0.48; }}
-        100% {{ transform: translate3d(5rem, -3rem, 0) scale(1.1); opacity: 0.38; }}
-      }}
-      @keyframes pulse-beam-secondary {{
-        0% {{ opacity: 0.12; transform: translateX(-50%) translateY(0) rotate(2deg) scale(1); }}
-        50% {{ opacity: 0.24; transform: translateX(-50%) translateY(-2rem) rotate(-1.5deg) scale(1.08); }}
-        100% {{ opacity: 0.16; transform: translateX(-50%) translateY(1.5rem) rotate(1.5deg) scale(1.12); }}
-      }}
-      @media (prefers-reduced-motion: reduce) {{
-        body::before,
-        .ambient,
-        .ambient__aurora,
-        .ambient__orb,
-        .ambient__beam {{
-          animation: none;
-        }}
       }}
     </style>
   </head>
