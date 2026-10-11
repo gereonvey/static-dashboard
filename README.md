@@ -8,9 +8,9 @@ No backend. No database. No app server. Just a generated page.
 
 ![Example dashboard](./example-dashboard.jpg)
 
-**Live demo:** [Open the example dashboard](https://sharebee.com/j1jv8s4p)
+**Live demo:** [Open the example dashboard](https://sharebee.com/oq8hx89o)
 
-Try the dashboard with public sample bookmarks. Hosted on Sharebee.
+Try the dashboard with public sample bookmarks. Hosted on [Sharebee](https://sharebee.com).
 
 ## How it works
 
