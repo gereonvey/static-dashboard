@@ -137,6 +137,7 @@ def build_html(data: dict[str, Any]) -> str:
     <title>{title}</title>
     <link rel="icon" href="{favicon}" type="image/svg+xml">
     <meta name="description" content="Bookmark dashboard generated from YAML.">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {{
         theme: {{
@@ -153,7 +154,6 @@ def build_html(data: dict[str, Any]) -> str:
         }}
       }};
     </script>
-    <script defer src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
     <style>

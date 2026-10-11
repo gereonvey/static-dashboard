@@ -8,6 +8,10 @@ No backend. No database. No app server. Just a generated page.
 
 ![Example dashboard](./example-dashboard.jpg)
 
+**Live demo:** [Open the example dashboard](https://sharebee.com/j1jv8s4p)
+
+Try the dashboard with public sample bookmarks. Hosted on Sharebee.
+
 ## How it works
 
 - `dashboard.yml` contains your categories, links, icons, and tags
